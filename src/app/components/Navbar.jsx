@@ -1,6 +1,19 @@
+'use client'
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import Button from "./Button";
+
 const Navbar = () => {
+  const pathName  = usePathname()
+
+  const links = [
+    {name: 'Home', href: '/'},
+    {name: 'Products', href: '/products'},
+  ]
     return (
-        <div className="navbar bg-base-100 shadow-sm">
+        <nav className="max-w-7xl mx-auto">
+          <div className="navbar bg-base-100 shadow-sm">
   <div className="navbar-start">
     <div className="dropdown">
       <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -8,38 +21,34 @@ const Navbar = () => {
       </div>
         <ul
         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-        <li><a>Item 1</a></li>
-        <li>
-          <a>Parent</a>
-          <ul className="p-2">
-            <li><a>Submenu 1</a></li>
-            <li><a>Submenu 2</a></li>
-          </ul>
-        </li>
-        <li><a>Item 3</a></li>
+        {
+          links?.map((link, idx) => {
+            return(
+              <li key={idx}>{link.name}</li>
+            )
+          })
+        }
       </ul>
     </div>
-    <a className="btn btn-ghost text-xl">daisyUI</a>
+    <a className="btn btn-ghost text-xl">Next.JS</a>
   </div>
   <div className="navbar-center hidden lg:flex">
     <ul className="menu menu-horizontal px-1">
-      <li><a>Item 1</a></li>
-      <li>
-        <details>
-          <summary>Parent</summary>
-          <ul className="p-2">
-            <li><a>Submenu 1</a></li>
-            <li><a>Submenu 2</a></li>
-          </ul>
-        </details>
-      </li>
-      <li><a>Item 3</a></li>
+       {
+          links?.map((link, idx) => {
+            const activePathName = pathName === link.href
+            return(
+              <li key={idx} className={activePathName ? 'border-b ': undefined}><Link href={link.href}>{link.name}</Link></li>
+            )
+          })
+        }
     </ul>
   </div>
   <div className="navbar-end">
-    <a className="btn">Button</a>
+    <Button >Login</Button>
   </div>
 </div>
+        </nav>
     );
 };
 
