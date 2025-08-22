@@ -11,9 +11,13 @@ const Navbar = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
 
-  const links = [
+  const publicLinks = [
     { name: "Home", href: "/" },
     { name: "Products", href: "/products" },
+  ];
+
+  const protectedLinks = [
+    { name: "Dashboard", href: "/dashboard/add-product" },
   ];
 
   if (status === "loading") {
@@ -42,9 +46,30 @@ const Navbar = () => {
               </svg>
             </div>
             <ul className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-              {links?.map((link, idx) => {
-                return <li key={idx}>{link.name}</li>;
+              {publicLinks?.map((link, idx) => {
+                const activePathName = pathName === link.href;
+                return (
+                  <li
+                    key={idx}
+                    className={activePathName ? "border-b " : undefined}
+                  >
+                    <Link href={link.href}>{link.name}</Link>
+                  </li>
+                );
               })}
+              {status === "authenticated" &&
+                session &&
+                protectedLinks?.map((link, idx) => {
+                  const activePathName = pathName === link.href;
+                  return (
+                    <li
+                      key={idx}
+                      className={activePathName ? "border-b " : undefined}
+                    >
+                      <Link href={link.href}>{link.name}</Link>
+                    </li>
+                  );
+                })}
             </ul>
           </div>
           <Link href={"/"} className="text-2xl font-semibold">
@@ -53,7 +78,7 @@ const Navbar = () => {
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
-            {links?.map((link, idx) => {
+            {publicLinks?.map((link, idx) => {
               const activePathName = pathName === link.href;
               return (
                 <li
@@ -64,6 +89,19 @@ const Navbar = () => {
                 </li>
               );
             })}
+            {status === "authenticated" &&
+              session &&
+              protectedLinks?.map((link, idx) => {
+                const activePathName = pathName === link.href;
+                return (
+                  <li
+                    key={idx}
+                    className={activePathName ? "border-b " : undefined}
+                  >
+                    <Link href={link.href}>{link.name}</Link>
+                  </li>
+                );
+              })}
           </ul>
         </div>
         <div className="navbar-end">
@@ -77,7 +115,9 @@ const Navbar = () => {
                   <img src={session.user?.image || "/default-user.png"} />
                 </div>
               </div>
-              <Button onClick={() => signOut()}>LogOut</Button>
+              <Button onClick={() => signOut({ callbackUrl: "/login" })}>
+                LogOut
+              </Button>
             </>
           ) : (
             // User is NOT logged in

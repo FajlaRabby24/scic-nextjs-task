@@ -10,9 +10,10 @@ const LoginPage = () => {
         <h1 className="mb-6 text-center text-2xl font-bold text-gray-800">
           Welcome Back
         </h1>
-        {/* Google */}
+
+        {/* Google Login */}
         <Button
-          onClick={() => signIn("google")}
+          onClick={() => signIn("google", { callbackUrl: "/products" })}
           className="btn btn-block bg-white text-black border-[#e5e5e5]"
         >
           <svg
