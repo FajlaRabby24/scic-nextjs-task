@@ -4,6 +4,8 @@ import Link from "next/link";
 const DB_NAME = "SCIC-NextJS-Task";
 const COLLECTION = "products";
 
+export const dynamic = "force-dynamic"; // 👈 always fetch fresh data
+
 export default async function ProductsPage() {
   const client = await clientPromise;
   const db = client.db(DB_NAME);

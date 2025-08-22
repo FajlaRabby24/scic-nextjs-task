@@ -1,9 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 export default function AddProductPage() {
+  const [isUploading, setIsUploading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -23,6 +26,7 @@ export default function AddProductPage() {
 
   const onSubmit = async (data) => {
     try {
+      setIsUploading(true);
       const payload = {
         title: data.title.trim(),
         category: data.category.trim(),
@@ -40,9 +44,12 @@ export default function AddProductPage() {
       if (!res.ok) throw new Error("Failed to add product");
 
       reset();
+      toast.success("Product added successfully!");
       router.push("/products");
     } catch (e) {
-      alert(e.message);
+      toast.error("Product upload failed. Please try again!");
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -134,7 +141,14 @@ export default function AddProductPage() {
 
         {/* Submit */}
         <div className="flex justify-end">
-          <button type="submit" className="btn btn-primary">
+          <button
+            disabled={isUploading}
+            type="submit"
+            className="btn btn-primary"
+          >
+            {isUploading && (
+              <span className="loading loading-spinner loading-sm"></span>
+            )}
             Add Product
           </button>
         </div>
