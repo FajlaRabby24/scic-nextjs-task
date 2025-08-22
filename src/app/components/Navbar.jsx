@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+
 import Button from "./Button";
 
 const Navbar = () => {
   const pathName = usePathname();
+  const router = useRouter();
 
   const links = [
     { name: "Home", href: "/" },
@@ -59,7 +61,7 @@ const Navbar = () => {
           </ul>
         </div>
         <div className="navbar-end">
-          <Button>Login</Button>
+          <Button onClick={() => router.push("/login")}>Login</Button>
         </div>
       </div>
     </nav>
