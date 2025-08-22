@@ -5,7 +5,7 @@ This is a next.js app where user can see product and product details. If user th
 ## 🚀 Live Demo
 
 You can check out the live site here:
-👉 [Live Site URL](https://scic-nextjs-task-4boe.vercel.app)
+👉 [Live Site URL](https://scic-nextjs-task-two.vercel.app)
 
 ---
 
