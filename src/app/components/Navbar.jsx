@@ -20,9 +20,9 @@ const Navbar = () => {
     { name: "Dashboard", href: "/dashboard/add-product" },
   ];
 
-  if (status === "loading") {
-    return <p>Loading...</p>;
-  }
+  // if (status === "loading") {
+  //   return <p>Loading...</p>;
+  // }
   return (
     <nav className="max-w-7xl mx-auto">
       <div className="navbar bg-base-100 shadow-sm">
@@ -106,7 +106,7 @@ const Navbar = () => {
         </div>
         <div className="navbar-end">
           {status === "loading" ? (
-            <p>Loading...</p>
+            <Button onClick={() => router.push("/login")}>Login</Button>
           ) : session ? (
             // User is logged in
             <>

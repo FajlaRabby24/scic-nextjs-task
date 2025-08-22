@@ -8,7 +8,11 @@ export const authOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
-  secret: process.env.SECRET,
+  pages: { signIn: "/login" },
+  secret: process.env.NEXTAUTH_SECRET,
+  session: {
+    strategy: "jwt", // ensures JWT session
+  },
 };
 
 const handler = NextAuth(authOptions);

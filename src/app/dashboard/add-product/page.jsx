@@ -1,71 +1,64 @@
 "use client";
 
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 export default function AddProductPage() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-  const [preview, setPreview] = useState(null);
-
   const {
     register,
     handleSubmit,
-    formState: { errors },
     reset,
-    watch,
-    setValue,
+    formState: { errors },
   } = useForm({
     defaultValues: {
       title: "",
       price: "",
       description: "",
       category: "",
-      image: null,
+      image: "", // url instead of file
     },
   });
 
-  if (status === "loading") return <p>Loading...</p>;
-  if (!session) return router.push("/login");
+  const router = useRouter();
 
-  const watchImage = watch("image");
+  const onSubmit = async (data) => {
+    try {
+      const payload = {
+        title: data.title.trim(),
+        category: data.category.trim(),
+        price: parseFloat(data.price),
+        description: data.description.trim(),
+        image: data.image.trim(), // now just a URL
+      };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setPreview(URL.createObjectURL(file));
-      setValue("image", file);
+      const res = await fetch("/api/products", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) throw new Error("Failed to add product");
+
+      reset();
+      router.push("/products");
+    } catch (e) {
+      alert(e.message);
     }
-  };
-
-  const onSubmit = (data) => {
-    console.log("New Product:", data);
-    alert("Product submitted! Check console.");
-    reset();
-    setPreview(null);
-    // TODO: send POST request to /api/products with FormData for image
   };
 
   return (
     <div className="max-w-4xl mx-auto mt-10 p-6">
-      <h1 className="text-2xl font-semibold text-gray-800 mb-6">
-        Add New Product
-      </h1>
+      <h1 className="text-2xl font-semibold mb-6">Add New Product</h1>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Title + Category */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Title
-            </label>
+            <label className="block text-sm mb-1">Title</label>
             <input
               {...register("title", { required: "Title is required" })}
+              className="input input-bordered w-full"
               placeholder="Product Title"
-              className="input input-bordered w-full focus:outline-none focus:ring-2 focus:ring-blue-400 rounded"
             />
             {errors.title && (
               <p className="text-red-500 text-sm mt-1">
@@ -73,15 +66,12 @@ export default function AddProductPage() {
               </p>
             )}
           </div>
-
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Category
-            </label>
+            <label className="block text-sm mb-1">Category</label>
             <input
               {...register("category", { required: "Category is required" })}
-              placeholder="Product Category"
-              className="input input-bordered w-full focus:outline-none focus:ring-2 focus:ring-blue-400 rounded"
+              className="input input-bordered w-full"
+              placeholder="Category"
             />
             {errors.category && (
               <p className="text-red-500 text-sm mt-1">
@@ -91,18 +81,16 @@ export default function AddProductPage() {
           </div>
         </div>
 
-        {/* Price + Image */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+        {/* Price + Image URL */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Price
-            </label>
+            <label className="block text-sm mb-1">Price</label>
             <input
               type="number"
               step="0.01"
               {...register("price", { required: "Price is required" })}
-              placeholder="Product Price"
-              className="input input-bordered w-full focus:outline-none focus:ring-2 focus:ring-blue-400 rounded"
+              className="input input-bordered w-full"
+              placeholder="0.00"
             />
             {errors.price && (
               <p className="text-red-500 text-sm mt-1">
@@ -110,39 +98,32 @@ export default function AddProductPage() {
               </p>
             )}
           </div>
-
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Image
-            </label>
+            <label className="block text-sm mb-1">Image URL</label>
             <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="file-input file-input-bordered w-full focus:outline-none focus:ring-2 focus:ring-blue-400 rounded"
+              type="url"
+              {...register("image", { required: "Image URL is required" })}
+              className="input input-bordered w-full"
+              placeholder="https://example.com/product.png"
             />
-            {preview && (
-              <img
-                src={preview}
-                alt="Preview"
-                className="mt-2 w-32 h-32 object-cover rounded border"
-              />
+            {errors.image && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.image.message}
+              </p>
             )}
           </div>
         </div>
 
         {/* Description */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Description
-          </label>
+          <label className="block text-sm mb-1">Description</label>
           <textarea
+            rows={4}
             {...register("description", {
               required: "Description is required",
             })}
-            placeholder="Product Description"
-            rows={4}
-            className="textarea textarea-bordered w-full focus:outline-none focus:ring-2 focus:ring-blue-400 rounded resize-none"
+            className="textarea textarea-bordered w-full resize-none"
+            placeholder="Product description"
           />
           {errors.description && (
             <p className="text-red-500 text-sm mt-1">
