@@ -1,5 +1,6 @@
 "use client";
 
+// import defaultUser from "default-user.png";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -73,12 +74,7 @@ const Navbar = () => {
             <>
               <div className="avatar mr-2">
                 <div className="ring-primary ring-offset-base-100 w-8 rounded-full ring-2 ring-offset-2">
-                  <img
-                    src={
-                      session.user?.image ||
-                      "https://img.daisyui.com/images/profile/demo/spiderperson@192.webp"
-                    }
-                  />
+                  <img src={session.user?.image || "/default-user.png"} />
                 </div>
               </div>
               <Button onClick={() => signOut()}>LogOut</Button>
