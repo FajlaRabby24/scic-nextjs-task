@@ -15,7 +15,11 @@ const Button = ({
       disabled={isLoading || props.disabled}
       {...props}
     >
-      {isLoading ? "Loading..." : children}
+      {isLoading ? (
+        <span className="loading loading-spinner loading-xs"></span>
+      ) : (
+        children
+      )}
     </button>
   );
 };

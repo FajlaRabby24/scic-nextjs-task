@@ -20,9 +20,6 @@ const Navbar = () => {
     { name: "Dashboard", href: "/dashboard/add-product" },
   ];
 
-  // if (status === "loading") {
-  //   return <p>Loading...</p>;
-  // }
   return (
     <nav className="max-w-7xl mx-auto">
       <div className="navbar bg-base-100 shadow-sm">
