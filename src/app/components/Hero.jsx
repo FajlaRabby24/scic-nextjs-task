@@ -1,11 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import Button from "./Button";
 
 export default function Hero() {
-  const router = useRouter();
   return (
     <section className="relative w-full bg-gray-50 dark:bg-gray-900">
       <div className="mx-auto max-w-7xl px-6 py-16 lg:flex lg:items-center lg:justify-between lg:gap-12 lg:px-12">
@@ -20,11 +17,6 @@ export default function Hero() {
             Shop top-rated gadgets, accessories, and essentials with unbeatable
             prices. Fast delivery, trusted sellers, and the latest trends.
           </p>
-
-          {/* CTA Buttons */}
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-4 sm:mt-8 lg:justify-start">
-            <Button onClick={() => router.push("/products")}>Shop Now</Button>
-          </div>
         </div>
 
         {/* Right Content (Hero Image) */}

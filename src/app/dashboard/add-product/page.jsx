@@ -1,12 +1,16 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
 export default function AddProductPage() {
   const [isUploading, setIsUploading] = useState(false);
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -22,7 +26,12 @@ export default function AddProductPage() {
     },
   });
 
-  const router = useRouter();
+  useEffect(() => {
+    if (status === "loading") return;
+    if (!session) {
+      router.push("/login"); // যদি লগইন না থাকে login এ পাঠাও
+    }
+  }, [session, status, router]);
 
   const onSubmit = async (data) => {
     try {
