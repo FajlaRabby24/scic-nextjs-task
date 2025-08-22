@@ -1,3 +1,8 @@
+"use client";
+
+import { signIn } from "next-auth/react";
+import Button from "../components/Button";
+
 const LoginPage = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
@@ -6,7 +11,10 @@ const LoginPage = () => {
           Welcome Back
         </h1>
         {/* Google */}
-        <button className="btn btn-block bg-white text-black border-[#e5e5e5]">
+        <Button
+          onClick={() => signIn("google")}
+          className="btn btn-block bg-white text-black border-[#e5e5e5]"
+        >
           <svg
             aria-label="Google logo"
             width="16"
@@ -35,7 +43,7 @@ const LoginPage = () => {
             </g>
           </svg>
           Login with Google
-        </button>
+        </Button>
       </div>
     </div>
   );

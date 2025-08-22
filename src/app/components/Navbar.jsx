@@ -1,18 +1,23 @@
 "use client";
 
+import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-
 import Button from "./Button";
 
 const Navbar = () => {
   const pathName = usePathname();
   const router = useRouter();
+  const { data: session, status } = useSession();
 
   const links = [
     { name: "Home", href: "/" },
     { name: "Products", href: "/products" },
   ];
+
+  if (status === "loading") {
+    return <p>Loading...</p>;
+  }
   return (
     <nav className="max-w-7xl mx-auto">
       <div className="navbar bg-base-100 shadow-sm">
@@ -61,7 +66,27 @@ const Navbar = () => {
           </ul>
         </div>
         <div className="navbar-end">
-          <Button onClick={() => router.push("/login")}>Login</Button>
+          {status === "loading" ? (
+            <p>Loading...</p>
+          ) : session ? (
+            // User is logged in
+            <>
+              <div className="avatar mr-2">
+                <div className="ring-primary ring-offset-base-100 w-8 rounded-full ring-2 ring-offset-2">
+                  <img
+                    src={
+                      session.user?.image ||
+                      "https://img.daisyui.com/images/profile/demo/spiderperson@192.webp"
+                    }
+                  />
+                </div>
+              </div>
+              <Button onClick={() => signOut()}>LogOut</Button>
+            </>
+          ) : (
+            // User is NOT logged in
+            <Button onClick={() => router.push("/login")}>Login</Button>
+          )}
         </div>
       </div>
     </nav>

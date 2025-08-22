@@ -1,8 +1,8 @@
-'use client'
+"use client";
 
 const Button = ({
   children,
-  className = "",
+  className = "btn btn-primary",
 
   isLoading = false,
   onClick, // 👈 added onClick
@@ -11,7 +11,7 @@ const Button = ({
   return (
     <button
       onClick={onClick} // 👈 now supports click event
-      className={`${className} btn btn-primary`}
+      className={`${className} `}
       disabled={isLoading || props.disabled}
       {...props}
     >
